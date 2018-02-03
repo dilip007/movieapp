@@ -16,55 +16,57 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
-@Table(name="city")
-public class City {
+@Table(name="store")
+public class Store {
 	
-	public City() {
+	public Store() {
 	}
-	
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Integer cityId;
-	
-	@Column(name="city")
-	@NotNull
-	@Size(max=50)
-	private String city;
+	private Integer storeId;
 	
 	@ManyToOne(cascade=CascadeType.ALL)
-	@JoinColumn(name="country_id")
-	private Country country;
+	@JoinColumn(name="address_id")
+	private Address address;
+	
+	
+	@JsonBackReference
+	@ManyToOne(cascade=CascadeType.ALL)
+	@JoinColumn(name="manager_staff_id")
+	private Staff staff;
 	
 	@Column(name="last_update")
 	@Temporal(TemporalType.DATE)
 	@NotNull
 	private Date lastUpdate;
 
-	public Integer getCityId() {
-		return cityId;
+	public Integer getStoreId() {
+		return storeId;
 	}
 
-	public void setCityId(Integer cityId) {
-		this.cityId = cityId;
+	public void setStoreId(Integer storeId) {
+		this.storeId = storeId;
 	}
 
-	public String getCity() {
-		return city;
+	public Address getAddress() {
+		return address;
 	}
 
-	public void setCity(String city) {
-		this.city = city;
+	public void setAddress(Address address) {
+		this.address = address;
 	}
 
-	public Country getCountry() {
-		return country;
+	public Staff getStaff() {
+		return staff;
 	}
 
-	public void setCountry(Country country) {
-		this.country = country;
+	public void setStaff(Staff staff) {
+		this.staff = staff;
 	}
 
 	public Date getLastUpdate() {
@@ -74,16 +76,16 @@ public class City {
 	public void setLastUpdate(Date lastUpdate) {
 		this.lastUpdate = lastUpdate;
 	}
-
+	
 	@PrePersist
 	@PreUpdate
 	public void saveOrUpdate() {
 		this.setLastUpdate(new Date());
 	}
-	
+
 	@Override
 	public String toString() {
-		return "City [cityId=" + cityId + ", city=" + city + ", country=" + country + ", lastUpdate=" + lastUpdate
+		return "Store [storeId=" + storeId + ", address=" + address + ", staff=" + staff + ", lastUpdate=" + lastUpdate
 				+ "]";
 	}
 	

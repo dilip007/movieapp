@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -16,6 +18,9 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name="actor")
 public class Actor {
+	
+	public Actor() {
+	}
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -68,6 +73,12 @@ public class Actor {
 		this.lastUpdate = lastUpdate;
 	}
 
+	@PrePersist
+	@PreUpdate
+	public void saveOrUpdate() {
+		this.setLastUpdate(new Date());
+	}
+	
 	@Override
 	public String toString() {
 		return "Actor [actorId=" + actorId + ", firstName=" + firstName + ", lastName=" + lastName + ", lastUpdate="

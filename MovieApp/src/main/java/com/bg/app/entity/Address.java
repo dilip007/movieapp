@@ -10,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -25,7 +27,7 @@ public class Address {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Integer addressID;
+	private Integer address_id;
 	
 	@Column(name="address")
 	@Size(max=50)
@@ -59,11 +61,11 @@ public class Address {
 	private Date lastUpdate;
 
 	public Integer getAddressID() {
-		return addressID;
+		return address_id;
 	}
 
 	public void setAddressID(Integer addressID) {
-		this.addressID = addressID;
+		this.address_id = addressID;
 	}
 
 	public City getCity() {
@@ -122,9 +124,15 @@ public class Address {
 		this.lastUpdate = lastUpdate;
 	}
 
+	@PrePersist
+	@PreUpdate
+	public void saveOrUpdate() {
+		this.setLastUpdate(new Date());
+	}
+	
 	@Override
 	public String toString() {
-		return "Address [addressID=" + addressID + ", address=" + address + ", address2=" + address2 + ", district="
+		return "Address [addressID=" + address_id + ", address=" + address + ", address2=" + address2 + ", district="
 				+ district + ", city=" + city + ", postalCode=" + postalCode + ", phone=" + phone + ", lastUpdate="
 				+ lastUpdate + "]";
 	}

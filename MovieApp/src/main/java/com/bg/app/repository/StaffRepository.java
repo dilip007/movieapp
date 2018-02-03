@@ -4,10 +4,10 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.stereotype.Repository;
 
-import com.bg.app.entity.City;
+import com.bg.app.entity.Staff;
 
 @Repository
-@RepositoryRestResource(collectionResourceRel = "city", path = "city")
-public interface CityRepository extends CrudRepository<City, Integer>{
-    City findByCityId(Integer cityId);
+@RepositoryRestResource(collectionResourceRel="staff",path="staff")
+public interface StaffRepository extends CrudRepository<Staff, Integer>{
+
 }

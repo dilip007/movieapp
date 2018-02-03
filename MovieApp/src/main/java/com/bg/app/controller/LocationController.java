@@ -11,13 +11,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bg.app.entity.City;
+import com.bg.app.entity.Staff;
 import com.bg.app.repository.CityRepository;
+import com.bg.app.repository.StaffRepository;
 
 @RestController
 public class LocationController {
 
 	@Autowired
 	CityRepository cityRepository; 
+	
+	@Autowired
+	StaffRepository staffRepository;
 	
 	@GetMapping(value="/allcity")
 	public ResponseEntity<List<City>> getAllCity(){
@@ -32,5 +37,13 @@ public class LocationController {
 	public ResponseEntity<City> getCityById(@PathVariable("cityId") Integer cityId){
 		City city = cityRepository.findByCityId(cityId);
 		return new ResponseEntity<City>(city, HttpStatus.OK);
+	}
+	
+	@GetMapping(value="/staffs")
+	public ResponseEntity<List<Staff>> getAllStaff(){
+		List<Staff> staffList = new ArrayList<>();
+		Iterable<Staff> staffs= staffRepository.findAll();
+		staffs.forEach(staffList::add);
+		return new ResponseEntity<List<Staff>>(staffList,HttpStatus.OK);
 	}
 }
