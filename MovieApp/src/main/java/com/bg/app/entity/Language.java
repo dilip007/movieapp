@@ -10,32 +10,38 @@ import javax.persistence.Id;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name="category")
-public class Category {
-	
+@Table(name="language")
+public class Language {
+
+	public Language() {
+	}
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Integer category_id;
+	private Integer languageId;
 	
 	@Column(name="name")
-	@Size(max=25)
+	@Size(max=20)
 	@NotNull
 	private String name;
 	
 	@Column(name="last_update")
-	@NotNull
-	private Date lastUpdate;
+    @NotNull
+    @Temporal(TemporalType.DATE)
+    private Date lastUpdate;
 
-	public Integer getCategoryId() {
-		return category_id;
+	public Integer getLanguageId() {
+		return languageId;
 	}
 
-	public void setCategoryId(Integer categoryId) {
-		this.category_id = categoryId;
+	public void setLanguageId(Integer languageId) {
+		this.languageId = languageId;
 	}
 
 	public String getName() {
@@ -62,7 +68,7 @@ public class Category {
 
 	@Override
 	public String toString() {
-		return "Category [categoryId=" + category_id + ", name=" + name + ", lastUpdate=" + lastUpdate + "]";
+		return "Language [languageId=" + languageId + ", name=" + name + ", lastUpdate=" + lastUpdate + "]";
 	}
 	
 }

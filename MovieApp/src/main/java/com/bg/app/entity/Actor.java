@@ -1,12 +1,17 @@
 package com.bg.app.entity;
 
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -24,7 +29,7 @@ public class Actor {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Integer actorId;
+	private Integer actor_id;
 	
     @Column(name="first_name")
     @Size(max=45)
@@ -36,17 +41,31 @@ public class Actor {
     @NotNull
     private String lastName;
 	
+    @ManyToMany(cascade=CascadeType.ALL)
+    @JoinTable(name="film_actor",
+    joinColumns= {@JoinColumn(name="actor_id")},
+    inverseJoinColumns= {@JoinColumn(name="film_id")})
+    private List<Film> filmList;
+    
     @Column(name="last_update")
     @NotNull
     @Temporal(TemporalType.DATE)
     private Date lastUpdate;
 
 	public Integer getActorId() {
-		return actorId;
+		return actor_id;
 	}
 
 	public void setActorId(Integer actorId) {
-		this.actorId = actorId;
+		this.actor_id = actorId;
+	}
+
+	public List<Film> getFilmList() {
+		return filmList;
+	}
+
+	public void setFilmList(List<Film> filmList) {
+		this.filmList = filmList;
 	}
 
 	public String getFirstName() {
@@ -81,7 +100,7 @@ public class Actor {
 	
 	@Override
 	public String toString() {
-		return "Actor [actorId=" + actorId + ", firstName=" + firstName + ", lastName=" + lastName + ", lastUpdate="
+		return "Actor [actorId=" + actor_id + ", firstName=" + firstName + ", lastName=" + lastName + ", lastUpdate="
 				+ lastUpdate + "]";
 	}
     

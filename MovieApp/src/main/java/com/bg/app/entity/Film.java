@@ -1,12 +1,20 @@
-/*package com.bg.app.entity;
+package com.bg.app.entity;
 
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -19,7 +27,7 @@ public class Film {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Integer filmId;
+	private Integer film_id;
 	
 	@Column(name="title")
     @Size(max=255)
@@ -33,11 +41,22 @@ public class Film {
     @Size(max=11)
 	private Integer releaseYear;
     
-    @Column(name="original_language_id")
-    @Size(max=3)
-    private Integer originalLanguageId;
+    @ManyToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name="language_id")
+    private Language language;
     
-    //languageId
+    @ManyToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name="original_language_id")
+    private Language originalLanguageId;
+    
+    @ManyToMany(cascade=CascadeType.ALL)
+    @JoinTable(name="film_category",
+    joinColumns= {@JoinColumn(name="film_id")},
+    inverseJoinColumns= {@JoinColumn(name="category_id")})
+    private List<Category> categoryList;
+    
+    @ManyToMany(mappedBy="filmList")
+    private List<Actor> actorsList;
     
     @Column(name="rental_duration")
     @NotNull
@@ -70,11 +89,11 @@ public class Film {
     private Date lastUpdate;
 
 	public Integer getFilmId() {
-		return filmId;
+		return film_id;
 	}
 
 	public void setFilmId(Integer filmId) {
-		this.filmId = filmId;
+		this.film_id = filmId;
 	}
 
 	public String getTitle() {
@@ -85,12 +104,28 @@ public class Film {
 		this.title = title;
 	}
 
+	public List<Actor> getActorsList() {
+		return actorsList;
+	}
+
+	public void setActorsList(List<Actor> actorsList) {
+		this.actorsList = actorsList;
+	}
+
 	public String getDescription() {
 		return description;
 	}
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public List<Category> getCategoryList() {
+		return categoryList;
+	}
+
+	public void setCategoryList(List<Category> categoryList) {
+		this.categoryList = categoryList;
 	}
 
 	public Integer getReleaseYear() {
@@ -101,11 +136,19 @@ public class Film {
 		this.releaseYear = releaseYear;
 	}
 
-	public Integer getOriginalLanguageId() {
+	public Language getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(Language language) {
+		this.language = language;
+	}
+
+	public Language getOriginalLanguageId() {
 		return originalLanguageId;
 	}
 
-	public void setOriginalLanguageId(Integer originalLanguageId) {
+	public void setOriginalLanguageId(Language originalLanguageId) {
 		this.originalLanguageId = originalLanguageId;
 	}
 
@@ -164,9 +207,20 @@ public class Film {
 	public void setLastUpdate(Date lastUpdate) {
 		this.lastUpdate = lastUpdate;
 	}
-
-    
 	
+	@PrePersist
+	@PreUpdate
+	public void saveOrUpdate() {
+		this.setLastUpdate(new Date());
+	}
+
+	@Override
+	public String toString() {
+		return "Film [film_id=" + film_id + ", title=" + title + ", description=" + description + ", releaseYear="
+				+ releaseYear + ", language=" + language + ", originalLanguageId=" + originalLanguageId
+				+ ", categoryList=" + categoryList + ", actorsList=" + actorsList + ", rentalDuration=" + rentalDuration
+				+ ", rentalRate=" + rentalRate + ", length=" + length + ", replacementCost=" + replacementCost
+				+ ", rating=" + rating + ", special_features=" + special_features + ", lastUpdate=" + lastUpdate + "]";
+	}
 	
 }
-*/

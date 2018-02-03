@@ -34,7 +34,6 @@ public class Store {
 	@JoinColumn(name="address_id")
 	private Address address;
 	
-	
 	@JsonBackReference
 	@ManyToOne(cascade=CascadeType.ALL)
 	@JoinColumn(name="manager_staff_id")
