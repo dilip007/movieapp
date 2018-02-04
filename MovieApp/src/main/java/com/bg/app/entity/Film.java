@@ -1,5 +1,6 @@
 package com.bg.app.entity;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -21,12 +22,18 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 @Entity
 @Table(name="film")
 public class Film {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
+	@Column(name="film_id")
 	private Integer film_id;
 	
 	@Column(name="title")
@@ -55,8 +62,9 @@ public class Film {
     inverseJoinColumns= {@JoinColumn(name="category_id")})
     private List<Category> categoryList;
     
+    @JsonManagedReference
     @ManyToMany(mappedBy="filmList")
-    private List<Actor> actorsList;
+    private List<Actor> actorsList = new ArrayList<>();
     
     @Column(name="rental_duration")
     @NotNull
@@ -88,12 +96,13 @@ public class Film {
     @Temporal(TemporalType.DATE)
     private Date lastUpdate;
 
-	public Integer getFilmId() {
+
+	public Integer getFilm_id() {
 		return film_id;
 	}
 
-	public void setFilmId(Integer filmId) {
-		this.film_id = filmId;
+	public void setFilm_id(Integer film_id) {
+		this.film_id = film_id;
 	}
 
 	public String getTitle() {

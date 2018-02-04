@@ -20,6 +20,12 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 @Entity
 @Table(name="actor")
 public class Actor {
@@ -29,6 +35,7 @@ public class Actor {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
+	@Column(name="actor_id")
 	private Integer actor_id;
 	
     @Column(name="first_name")
@@ -41,6 +48,7 @@ public class Actor {
     @NotNull
     private String lastName;
 	
+    @JsonBackReference
     @ManyToMany(cascade=CascadeType.ALL)
     @JoinTable(name="film_actor",
     joinColumns= {@JoinColumn(name="actor_id")},
@@ -52,12 +60,13 @@ public class Actor {
     @Temporal(TemporalType.DATE)
     private Date lastUpdate;
 
-	public Integer getActorId() {
+
+	public Integer getActor_id() {
 		return actor_id;
 	}
 
-	public void setActorId(Integer actorId) {
-		this.actor_id = actorId;
+	public void setActor_id(Integer actor_id) {
+		this.actor_id = actor_id;
 	}
 
 	public List<Film> getFilmList() {
