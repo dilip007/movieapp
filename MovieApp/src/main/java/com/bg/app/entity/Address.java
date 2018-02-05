@@ -1,5 +1,6 @@
 package com.bg.app.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
@@ -18,10 +19,14 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name="address")
-public class Address {
+public class Address implements Serializable{
 	
+	private static final long serialVersionUID = 909143862225297888L;
+
 	public Address() {
 	}
 
@@ -56,6 +61,7 @@ public class Address {
 	@NotNull
 	private String phone;
 	
+	@JsonIgnore
 	@Column(name="last_update")
 	@Temporal(TemporalType.DATE)
 	private Date lastUpdate;

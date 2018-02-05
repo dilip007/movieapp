@@ -1,5 +1,6 @@
 package com.bg.app.entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -14,22 +15,35 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedNativeQueries;
+import javax.persistence.NamedNativeQuery;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
+import javax.persistence.SqlResultSetMapping;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="film")
-public class Film {
+@SqlResultSetMapping(
+	    name = "implicit", entities =
+	    @javax.persistence.EntityResult(entityClass = Film.class)
+	)
+@NamedNativeQueries({
+	@NamedNativeQuery(
+			name="getMovieListByActorId",
+			query="SELECT * FROM film f WHERE f.film_id IN(SELECT fa.film_id FROM film_actor fa where fa.actor_id=?)",
+			resultSetMapping="implicit"
+			)
+})
+public class Film implements Serializable{
+
+	private static final long serialVersionUID = 1364419698353096917L;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -49,6 +63,7 @@ public class Film {
 	private Integer releaseYear;
     
     @ManyToOne(cascade=CascadeType.ALL)
+    //@Fetch(FetchMode.SELECT)
     @JoinColumn(name="language_id")
     private Language language;
     
@@ -62,7 +77,7 @@ public class Film {
     inverseJoinColumns= {@JoinColumn(name="category_id")})
     private List<Category> categoryList;
     
-    @JsonManagedReference
+    //@JsonManagedReference
     @ManyToMany(mappedBy="filmList")
     private List<Actor> actorsList = new ArrayList<>();
     
@@ -91,6 +106,7 @@ public class Film {
     @Size(max=100)
     private String special_features;
 	
+    @JsonIgnore
     @Column(name="last_update")
     @NotNull
     @Temporal(TemporalType.DATE)

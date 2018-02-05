@@ -1,5 +1,6 @@
 package com.bg.app.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
@@ -18,11 +19,14 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="store")
-public class Store {
+public class Store implements Serializable{
 	
+	private static final long serialVersionUID = -4075553995622101333L;
+
 	public Store() {
 	}
 
@@ -39,6 +43,7 @@ public class Store {
 	@JoinColumn(name="manager_staff_id")
 	private Staff staff;
 	
+	@JsonIgnore
 	@Column(name="last_update")
 	@Temporal(TemporalType.DATE)
 	@NotNull

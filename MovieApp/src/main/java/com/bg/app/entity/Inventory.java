@@ -1,5 +1,6 @@
 package com.bg.app.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
@@ -17,9 +18,13 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name="inventory")
-public class Inventory {
+public class Inventory implements Serializable{
+
+	private static final long serialVersionUID = 3394384382445618756L;
 
 	public Inventory() {
 	}
@@ -36,6 +41,7 @@ public class Inventory {
 	@JoinColumn(name="film_id")
 	private Film film;
 
+	@JsonIgnore
 	@Column(name="last_update")
 	@NotNull
 	@Temporal(TemporalType.DATE)

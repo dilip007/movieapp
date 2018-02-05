@@ -1,5 +1,6 @@
 package com.bg.app.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -13,10 +14,14 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name="category")
-public class Category {
+public class Category implements Serializable{
 	
+	private static final long serialVersionUID = 1287580247409439145L;
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Integer category_id;
@@ -26,6 +31,7 @@ public class Category {
 	@NotNull
 	private String name;
 	
+	@JsonIgnore
 	@Column(name="last_update")
 	@NotNull
 	private Date lastUpdate;

@@ -1,5 +1,6 @@
 package com.bg.app.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
@@ -17,10 +18,14 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name="rental")
-public class Rental {
+public class Rental implements Serializable{
 	
+	private static final long serialVersionUID = 5107183526349576406L;
+
 	public Rental() {
 	}
 	
@@ -50,6 +55,7 @@ public class Rental {
 	@Temporal(TemporalType.DATE)
 	private Date returnDate;
 	
+	@JsonIgnore
 	@Column(name="last_update")
 	@NotNull
 	private Date lastUpdate;

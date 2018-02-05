@@ -1,5 +1,6 @@
 package com.bg.app.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -15,9 +16,13 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name="language")
-public class Language {
+public class Language implements Serializable{
+
+	private static final long serialVersionUID = 2799779981955492169L;
 
 	public Language() {
 	}
@@ -31,6 +36,7 @@ public class Language {
 	@NotNull
 	private String name;
 	
+	@JsonIgnore
 	@Column(name="last_update")
     @NotNull
     @Temporal(TemporalType.DATE)

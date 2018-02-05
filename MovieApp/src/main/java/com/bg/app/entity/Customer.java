@@ -1,5 +1,6 @@
 package com.bg.app.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
@@ -18,9 +19,13 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name="customer")
-public class Customer {
+public class Customer implements Serializable{
+
+	private static final long serialVersionUID = 5977805169496137689L;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -52,11 +57,13 @@ public class Customer {
 	@NotNull
 	private Integer active;
 	
+	@JsonIgnore
 	@Column(name="create_date",columnDefinition="DATETIME")
 	@NotNull
 	@Temporal(TemporalType.DATE)
 	private Date createDate;
 	
+	@JsonIgnore
 	@Column(name="last_update")
 	@NotNull
 	@Temporal(TemporalType.DATE)

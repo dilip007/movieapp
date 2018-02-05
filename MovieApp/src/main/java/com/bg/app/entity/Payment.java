@@ -1,5 +1,6 @@
 package com.bg.app.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
@@ -17,9 +18,13 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name="payment")
-public class Payment {
+public class Payment implements Serializable{
+
+	private static final long serialVersionUID = -6428753962954434431L;
 
 	public Payment() {
 	}
@@ -49,6 +54,7 @@ public class Payment {
 	@Temporal(TemporalType.DATE)
 	private Date paymentDate;
 	
+	@JsonIgnore
 	@Column(name="last_update")
 	@NotNull
 	private Date lastUpdate;

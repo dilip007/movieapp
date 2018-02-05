@@ -1,5 +1,6 @@
 package com.bg.app.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
@@ -18,12 +19,15 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 //import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name="staff")
-public class Staff {
+public class Staff implements Serializable{
+
+	private static final long serialVersionUID = -9130946658793355218L;
 
 	public Staff() {
 	}
@@ -42,7 +46,6 @@ public class Staff {
     @NotNull
     private String lastName;
     
-    //@JsonIgnore
     @ManyToOne(cascade=CascadeType.ALL)
     @JoinColumn(name="address_id")
     private Address address;
@@ -71,6 +74,7 @@ public class Staff {
     @NotNull
     private String password;
     
+    @JsonIgnore
     @Column(name="last_update")
     @NotNull
     @Temporal(TemporalType.DATE)

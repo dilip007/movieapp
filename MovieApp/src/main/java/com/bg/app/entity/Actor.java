@@ -1,5 +1,6 @@
 package com.bg.app.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -21,15 +22,14 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @Table(name="actor")
-public class Actor {
+public class Actor implements Serializable{
 	
+	private static final long serialVersionUID = -1969179285288123030L;
+
 	public Actor() {
 	}
 
@@ -55,6 +55,7 @@ public class Actor {
     inverseJoinColumns= {@JoinColumn(name="film_id")})
     private List<Film> filmList;
     
+    @JsonIgnore
     @Column(name="last_update")
     @NotNull
     @Temporal(TemporalType.DATE)
