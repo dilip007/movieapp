@@ -19,6 +19,7 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name="payment")
@@ -33,14 +34,17 @@ public class Payment implements Serializable{
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Integer payment_id;
 	
+	//@JsonManagedReference
 	@ManyToOne(cascade=CascadeType.ALL)
 	@JoinColumn(name="customer_id")
 	private Customer customer;
 	
+	//@JsonManagedReference
 	@ManyToOne(cascade=CascadeType.ALL)
 	@JoinColumn(name="rental_id")
 	private Rental rental;
 
+	//@JsonManagedReference
 	@ManyToOne(cascade=CascadeType.ALL)
 	@JoinColumn(name="staff_id")
 	private Staff staff;
@@ -127,5 +131,5 @@ public class Payment implements Serializable{
 		return "Payment [payment_id=" + payment_id + ", customer=" + customer + ", rental=" + rental + ", staff="
 				+ staff + ", amount=" + amount + ", paymentDate=" + paymentDate + ", lastUpdate=" + lastUpdate + "]";
 	}
-	
+
 }

@@ -8,6 +8,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityResult;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,6 +18,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedNativeQueries;
 import javax.persistence.NamedNativeQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.SqlResultSetMapping;
@@ -26,17 +28,19 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name="film")
 @SqlResultSetMapping(
 	    name = "implicit", entities =
-	    @javax.persistence.EntityResult(entityClass = Film.class)
+	    @EntityResult(entityClass = Film.class)
 	)
 @NamedNativeQueries({
 	@NamedNativeQuery(
-			name="getMovieListByActorId",
+			name="Film.getMovieListByActorId",
 			query="SELECT * FROM film f WHERE f.film_id IN(SELECT fa.film_id FROM film_actor fa where fa.actor_id=?)",
 			resultSetMapping="implicit"
 			)
@@ -50,60 +54,65 @@ public class Film implements Serializable{
 	@Column(name="film_id")
 	private Integer film_id;
 	
-	@Column(name="title")
-    @Size(max=255)
+	@Column(name="title",length=255)
+    //@Size(max=255)
     @NotNull
 	private String title;
     
     @Column(name="description")
     private String description;
     
-    @Column(name="release_year")
-    @Size(max=11)
+    @Column(name="release_year",length=11)
+    //@Size(max=11)
 	private Integer releaseYear;
     
+    //@JsonManagedReference
     @ManyToOne(cascade=CascadeType.ALL)
-    //@Fetch(FetchMode.SELECT)
     @JoinColumn(name="language_id")
     private Language language;
     
+    //@JsonManagedReference
     @ManyToOne(cascade=CascadeType.ALL)
     @JoinColumn(name="original_language_id")
     private Language originalLanguageId;
     
+    @JsonBackReference(value="categoryList")
     @ManyToMany(cascade=CascadeType.ALL)
     @JoinTable(name="film_category",
     joinColumns= {@JoinColumn(name="film_id")},
     inverseJoinColumns= {@JoinColumn(name="category_id")})
-    private List<Category> categoryList;
+    private List<Category> category = new ArrayList<>();
     
     //@JsonManagedReference
-    @ManyToMany(mappedBy="filmList")
+    @ManyToMany(mappedBy="filmList",cascade=CascadeType.ALL)
     private List<Actor> actorsList = new ArrayList<>();
     
+    @JsonBackReference(value="inventoryList")
+    @OneToMany(mappedBy="film",cascade=CascadeType.ALL)
+    private List<Inventory> inventoryList;
+    
     @Column(name="rental_duration")
-    @NotNull
+    //@NotNull
     private Integer rentalDuration;
     
     @Column(name="rental_rate")
-    @NotNull
+    //@NotNull
     private Float rentalRate;
     
-    @Column(name="length")
-    @Size(max=5)
-    @NotNull
+    @Column(name="length",length=5)
+    //@Size(max=5)
     private Integer length;
     
     @Column(name="replacement_cost")
-    @NotNull
+    //@NotNull
     private Float replacementCost;
     
-    @Column(name="rating")
-    @Size(max=20)
+    @Column(name="rating",length=20)
+    //@Size(max=20)
     private String rating;
     
-    @Column(name="special_features")
-    @Size(max=100)
+    @Column(name="special_features",length=100)
+    //@Size(max=100)
     private String special_features;
 	
     @JsonIgnore
@@ -111,7 +120,6 @@ public class Film implements Serializable{
     @NotNull
     @Temporal(TemporalType.DATE)
     private Date lastUpdate;
-
 
 	public Integer getFilm_id() {
 		return film_id;
@@ -145,12 +153,20 @@ public class Film implements Serializable{
 		this.description = description;
 	}
 
-	public List<Category> getCategoryList() {
-		return categoryList;
+	public List<Inventory> getInventoryList() {
+		return inventoryList;
 	}
 
-	public void setCategoryList(List<Category> categoryList) {
-		this.categoryList = categoryList;
+	public void setInventoryList(List<Inventory> inventoryList) {
+		this.inventoryList = inventoryList;
+	}
+
+	public List<Category> getCategory() {
+		return category;
+	}
+
+	public void setCategory(List<Category> category) {
+		this.category = category;
 	}
 
 	public Integer getReleaseYear() {
@@ -243,9 +259,10 @@ public class Film implements Serializable{
 	public String toString() {
 		return "Film [film_id=" + film_id + ", title=" + title + ", description=" + description + ", releaseYear="
 				+ releaseYear + ", language=" + language + ", originalLanguageId=" + originalLanguageId
-				+ ", categoryList=" + categoryList + ", actorsList=" + actorsList + ", rentalDuration=" + rentalDuration
-				+ ", rentalRate=" + rentalRate + ", length=" + length + ", replacementCost=" + replacementCost
-				+ ", rating=" + rating + ", special_features=" + special_features + ", lastUpdate=" + lastUpdate + "]";
+				+ ", categoryList=" + category + ", actorsList=" + actorsList + ", inventoryList=" + inventoryList
+				+ ", rentalDuration=" + rentalDuration + ", rentalRate=" + rentalRate + ", length=" + length
+				+ ", replacementCost=" + replacementCost + ", rating=" + rating + ", special_features="
+				+ special_features + ", lastUpdate=" + lastUpdate + "]";
 	}
-	
+
 }

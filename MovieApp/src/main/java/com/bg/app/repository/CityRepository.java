@@ -8,6 +8,7 @@ import com.bg.app.entity.City;
 
 @Repository
 @RepositoryRestResource(collectionResourceRel = "city", path = "city")
+
 public interface CityRepository extends CrudRepository<City, Integer>{
-    City findByCityId(Integer cityId);
+	
 }

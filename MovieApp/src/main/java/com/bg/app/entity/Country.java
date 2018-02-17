@@ -2,12 +2,15 @@ package com.bg.app.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -16,6 +19,7 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -29,12 +33,16 @@ public class Country implements Serializable{
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Integer countryId;
+	private Integer country_id;
 	
 	@Column(name="country")
 	@NotNull
 	@Size(max=50)
 	private String country;
+	
+	@JsonBackReference
+	@OneToMany(mappedBy="country",cascade=CascadeType.ALL)
+	private List<City> city;
 	
 	@JsonIgnore
 	@Column(name="last_update")
@@ -42,12 +50,12 @@ public class Country implements Serializable{
 	@NotNull
 	private Date lastUpdate;
 
-	public Integer getCountryId() {
-		return countryId;
+	public Integer getCountry_id() {
+		return country_id;
 	}
 
-	public void setCountryId(Integer countryId) {
-		this.countryId = countryId;
+	public void setCountry_id(Integer country_id) {
+		this.country_id = country_id;
 	}
 
 	public String getCountry() {
@@ -56,6 +64,14 @@ public class Country implements Serializable{
 
 	public void setCountry(String country) {
 		this.country = country;
+	}
+
+	public List<City> getCity() {
+		return city;
+	}
+
+	public void setCity(List<City> city) {
+		this.city = city;
 	}
 
 	public Date getLastUpdate() {
@@ -71,10 +87,11 @@ public class Country implements Serializable{
 	public void saveOrUpdate() {
 		this.setLastUpdate(new Date());
 	}
-	
+
 	@Override
 	public String toString() {
-		return "Country [countryId=" + countryId + ", country=" + country + ", lastUpdate=" + lastUpdate + "]";
+		return "Country [countryId=" + country_id + ", country=" + country + ", city=" + city + ", lastUpdate="
+				+ lastUpdate + "]";
 	}
 	
 }

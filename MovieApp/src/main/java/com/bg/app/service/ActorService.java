@@ -7,6 +7,7 @@ import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.bg.app.entity.Actor;
@@ -36,6 +37,7 @@ public class ActorService {
 		return actorRepository.findAll();
 	}
 	
+	@Cacheable("actor")
 	public Actor findActorById(int id) {
 		return actorRepository.findOne(id);
 	}

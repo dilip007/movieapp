@@ -40,11 +40,17 @@ public class ActorControlller {
 		return new ResponseEntity<List<Actor>>(actorList, HttpStatus.OK);
 	}
 
-	@GetMapping(value="/actorid/{id}")
+	/*@GetMapping(value="/actorid/{id}")
 	public Actor getActorById(@PathVariable("id") int id) {
 		LOG.info("Actor id = "+id);
 		Actor actor = actorService.findActorById(id);
 		return actor;
+	}*/
+	@GetMapping(value="/actorid/{id}")
+	public ResponseEntity<Actor> getActorById(@PathVariable("id") int id) {
+		LOG.info("Actor id = "+id);
+		Actor actor = actorService.findActorById(id);
+		return new ResponseEntity<Actor>(actor,HttpStatus.OK);
 	}
 
 	@PutMapping(value="/updateactor/{id}",consumes=MediaType.APPLICATION_JSON_VALUE)

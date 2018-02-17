@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bg.app.entity.Address;
+import com.bg.app.entity.AddressProjection;
 import com.bg.app.entity.City;
+import com.bg.app.entity.Country;
 import com.bg.app.service.AddressService;
 import com.bg.app.service.LocationService;
 
@@ -42,4 +44,13 @@ public class LocationController {
 		return new ResponseEntity<Address>(addressService.getAddressById(id),HttpStatus.OK);
 	}
 	
+	@GetMapping(value="country/{id}")
+	public ResponseEntity<Country> getCountryById(@PathVariable("id") int id){
+		return new ResponseEntity<Country>(locationService.getCountryById(id),HttpStatus.OK);
+	}
+	
+	@GetMapping(value="/district/{district}")
+	public List<AddressProjection> getAddressByDistrict(@PathVariable("district") String district){
+		return addressService.getAddressByDistrict(district);
+	}
 }

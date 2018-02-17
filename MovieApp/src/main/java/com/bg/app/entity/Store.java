@@ -1,7 +1,8 @@
-package com.bg.app.entity;
+	package com.bg.app.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -11,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -20,6 +22,7 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name="store")
@@ -34,14 +37,27 @@ public class Store implements Serializable{
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Integer storeId;
 	
+	//@JsonManagedReference
 	@ManyToOne(cascade=CascadeType.ALL)
 	@JoinColumn(name="address_id")
 	private Address address;
 	
-	@JsonBackReference
+	//@JsonManagedReference
 	@ManyToOne(cascade=CascadeType.ALL)
 	@JoinColumn(name="manager_staff_id")
 	private Staff staff;
+	
+	@JsonBackReference("inventory")
+	@OneToMany(mappedBy="store",cascade=CascadeType.ALL)
+	private List<Inventory> inventory;
+	
+	@JsonBackReference("customer")
+	@OneToMany(mappedBy="store",cascade=CascadeType.ALL)
+	private List<Customer> customer;
+	
+	@JsonBackReference("staffList")
+	@OneToMany(mappedBy="store",cascade=CascadeType.ALL)
+	private List<Staff> listStaff;
 	
 	@JsonIgnore
 	@Column(name="last_update")
@@ -57,12 +73,36 @@ public class Store implements Serializable{
 		this.storeId = storeId;
 	}
 
+	public List<Inventory> getInventory() {
+		return inventory;
+	}
+
+	public void setInventory(List<Inventory> inventory) {
+		this.inventory = inventory;
+	}
+
+	public List<Staff> getListStaff() {
+		return listStaff;
+	}
+
+	public void setListStaff(List<Staff> listStaff) {
+		this.listStaff = listStaff;
+	}
+
 	public Address getAddress() {
 		return address;
 	}
 
 	public void setAddress(Address address) {
 		this.address = address;
+	}
+
+	public List<Customer> getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(List<Customer> customer) {
+		this.customer = customer;
 	}
 
 	public Staff getStaff() {
@@ -89,8 +129,8 @@ public class Store implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Store [storeId=" + storeId + ", address=" + address + ", staff=" + staff + ", lastUpdate=" + lastUpdate
-				+ "]";
+		return "Store [storeId=" + storeId + ", address=" + address + ", staff=" + staff + ", inventory=" + inventory
+				+ ", customer=" + customer + ", listStaff=" + listStaff + ", lastUpdate=" + lastUpdate + "]";
 	}
-	
+
 }

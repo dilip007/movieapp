@@ -2,6 +2,7 @@ package com.bg.app.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -11,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -19,7 +21,9 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name="address")
@@ -48,9 +52,22 @@ public class Address implements Serializable{
 	@NotNull
 	private String district;
 	
+	//@JsonManagedReference
 	@ManyToOne(cascade=CascadeType.ALL)
 	@JoinColumn(name="city_id")
 	private City city;
+	
+	@JsonBackReference("customer")
+	@OneToMany(mappedBy="address",cascade=CascadeType.ALL)
+	private List<Customer> customer;
+	
+	@JsonBackReference("store")
+	@OneToMany(mappedBy="address",cascade=CascadeType.ALL)
+	private List<Store> store;
+	
+	@JsonBackReference("staff")
+	@OneToMany(mappedBy="address",cascade=CascadeType.ALL)
+	private List<Staff> staff;
 	
 	@Column(name="postal_code")
 	@Size(max=10)
@@ -66,12 +83,12 @@ public class Address implements Serializable{
 	@Temporal(TemporalType.DATE)
 	private Date lastUpdate;
 
-	public Integer getAddressID() {
+	public Integer getAddress_id() {
 		return address_id;
 	}
 
-	public void setAddressID(Integer addressID) {
-		this.address_id = addressID;
+	public void setAddress_id(Integer address_id) {
+		this.address_id = address_id;
 	}
 
 	public City getCity() {
@@ -96,6 +113,30 @@ public class Address implements Serializable{
 
 	public void setAddress2(String address2) {
 		this.address2 = address2;
+	}
+
+	public List<Store> getStore() {
+		return store;
+	}
+
+	public void setStore(List<Store> store) {
+		this.store = store;
+	}
+
+	public List<Staff> getStaff() {
+		return staff;
+	}
+
+	public void setStaff(List<Staff> staff) {
+		this.staff = staff;
+	}
+
+	public List<Customer> getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(List<Customer> customer) {
+		this.customer = customer;
 	}
 
 	public String getDistrict() {
@@ -135,12 +176,12 @@ public class Address implements Serializable{
 	public void saveOrUpdate() {
 		this.setLastUpdate(new Date());
 	}
-	
+
 	@Override
 	public String toString() {
-		return "Address [addressID=" + address_id + ", address=" + address + ", address2=" + address2 + ", district="
-				+ district + ", city=" + city + ", postalCode=" + postalCode + ", phone=" + phone + ", lastUpdate="
-				+ lastUpdate + "]";
+		return "Address [address_id=" + address_id + ", address=" + address + ", address2=" + address2 + ", district="
+				+ district + ", city=" + city + ", customer=" + customer + ", store=" + store + ", staff=" + staff
+				+ ", postalCode=" + postalCode + ", phone=" + phone + ", lastUpdate=" + lastUpdate + "]";
 	}
 
 }

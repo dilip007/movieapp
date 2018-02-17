@@ -2,6 +2,7 @@ package com.bg.app.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -11,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -19,7 +21,9 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name="city")
@@ -32,13 +36,18 @@ public class City implements Serializable{
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Integer cityId;
+	private Integer city_id;
 	
 	@Column(name="city")
 	@NotNull
 	@Size(max=50)
 	private String city;
 	
+	@JsonBackReference
+	@OneToMany(mappedBy="city",cascade=CascadeType.ALL)
+	private List<Address> address;
+	
+	//@JsonManagedReference
 	@ManyToOne(cascade=CascadeType.ALL)
 	@JoinColumn(name="country_id")
 	private Country country;
@@ -49,12 +58,13 @@ public class City implements Serializable{
 	@NotNull
 	private Date lastUpdate;
 
-	public Integer getCityId() {
-		return cityId;
+
+	public Integer getCity_id() {
+		return city_id;
 	}
 
-	public void setCityId(Integer cityId) {
-		this.cityId = cityId;
+	public void setCity_id(Integer city_id) {
+		this.city_id = city_id;
 	}
 
 	public String getCity() {
@@ -63,6 +73,14 @@ public class City implements Serializable{
 
 	public void setCity(String city) {
 		this.city = city;
+	}
+	
+	public List<Address> getAddress() {
+		return address;
+	}
+
+	public void setAddress(List<Address> address) {
+		this.address = address;
 	}
 
 	public Country getCountry() {
@@ -86,11 +104,11 @@ public class City implements Serializable{
 	public void saveOrUpdate() {
 		this.setLastUpdate(new Date());
 	}
-	
+
 	@Override
 	public String toString() {
-		return "City [cityId=" + cityId + ", city=" + city + ", country=" + country + ", lastUpdate=" + lastUpdate
-				+ "]";
+		return "City [cityId=" + city_id + ", city=" + city + ", address=" + address + ", country=" + country
+				+ ", lastUpdate=" + lastUpdate + "]";
 	}
 	
 }
